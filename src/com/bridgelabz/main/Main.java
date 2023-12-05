@@ -13,18 +13,20 @@ public class Main {
      */
     public static void main(String[] args) {
         // Create an ArrayList to store EmployeePayrollData objects
-        ArrayList<EmployeePayrollData> employeePayrollList = new ArrayList<>();
+        ArrayList<EmployeePayrollData> employeePayrollList = new ArrayList<>(); EmployeePayrollService payrollService = new EmployeePayrollService(employeePayrollList);
 
-        // Create an EmployeePayrollService object with the ArrayList
-        EmployeePayrollService employeePayroll = new EmployeePayrollService(employeePayrollList);
-
-        // Create a Scanner object for user input
         Scanner scanner = new Scanner(System.in);
 
-        // Read employee details from the user
-        employeePayroll.readEmployeePayrollDetails(scanner);
+        char choice;
+        do {
+            payrollService.readEmployeePayrollDetails(scanner);
+            System.out.println("Do you want to add another employee? (y/n): ");
+            choice = scanner.next().charAt(0);
+        } while (choice == 'y' || choice == 'Y');
 
-        // Write employee payroll data to the console
-        employeePayroll.writeEmployeePayrollData();
+        // Write employee payroll to file
+        payrollService.writeEmployeePayrollData();
+        int noOfEmployees=payrollService.countEntries();
+        System.out.println("The number of employees in the file are : "+noOfEmployees);
     }
 }

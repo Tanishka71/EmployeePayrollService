@@ -1,9 +1,15 @@
 package com.bridgelabz.main;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Scanner;
 
-public class EmployeePayrollService {
+public class EmployeePayrollService{
 
     public enum IOService {
         CONSOLE_IO,
@@ -11,7 +17,7 @@ public class EmployeePayrollService {
         DB_IO,
         REST_IO
     }
-
+    private static final String FILE_NAME="employee_payroll.txt";
     private List<EmployeePayrollData> employeePayrollList;
 
     public EmployeePayrollService(List<EmployeePayrollData> employeePayrollList) {
@@ -40,6 +46,26 @@ public class EmployeePayrollService {
      * @return None
      */
     public void writeEmployeePayrollData() {
-        System.out.println("\nWriting Employee Payroll to Console\n" + employeePayrollList);
+    	  try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(FILE_NAME))) {
+              objectOutputStream.writeObject(employeePayrollList);
+              System.out.println("Employee payroll data written to file successfully.");
+          } catch (IOException e) {
+              e.printStackTrace();
+          }
+    }
+    
+    /**
+     * @desc Counts the number of employees in the file
+     * @params None
+     * @return Integer (no of employees in the file)
+     */
+    public int countEntries() {
+        try (ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(FILE_NAME))) {
+            List<EmployeePayrollData> storedData = (List<EmployeePayrollData>) objectInputStream.readObject();
+            return storedData.size();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return -1;
+        }
     }
 }

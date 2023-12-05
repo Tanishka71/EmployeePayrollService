@@ -1,5 +1,8 @@
 package com.bridgelabz.main;
-public class EmployeePayrollData {
+
+import java.io.Serializable;
+
+public class EmployeePayrollData implements Serializable {
 
     // Fields to store employee data
     public int id;
