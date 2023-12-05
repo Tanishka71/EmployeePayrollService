@@ -25,7 +25,8 @@ public class Main {
         } while (choice == 'y' || choice == 'Y');
 
         // Write employee payroll to file
-        payrollService.writeEmployeePayrollData();
+        payrollService.writeEmployeePayrollData(employeePayrollList);
+        payrollService.printEmployeePayrollData();
         int noOfEmployees=payrollService.countEntries();
         System.out.println("The number of employees in the file are : "+noOfEmployees);
     }

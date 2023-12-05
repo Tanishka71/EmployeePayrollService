@@ -28,6 +28,6 @@ public class EmployeePayrollData implements Serializable {
      * @return String - Formatted string containing employee details.
      */
     public String toString() {
-        return "id=" + id + ", name=" + name + '\'' + ", salary=" + salary;
+        return "id=" + id + " name=" + name + '\'' + ", salary=" + salary;
     }
 }

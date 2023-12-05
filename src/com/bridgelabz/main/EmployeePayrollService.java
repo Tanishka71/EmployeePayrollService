@@ -1,11 +1,11 @@
 package com.bridgelabz.main;
 
-import java.io.FileInputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Scanner;
 
@@ -17,7 +17,7 @@ public class EmployeePayrollService{
         DB_IO,
         REST_IO
     }
-    private static final String FILE_NAME="employee_payroll.txt";
+    static final String FILE_NAME="employee_payroll.txt";
     private List<EmployeePayrollData> employeePayrollList;
 
     public EmployeePayrollService(List<EmployeePayrollData> employeePayrollList) {
@@ -39,33 +39,58 @@ public class EmployeePayrollService{
         double salary = scanner.nextDouble();
         employeePayrollList.add(new EmployeePayrollData(id, name, salary));
     }
-
+    //<----------------------USE CASE 4------------------------------>
     /**
      * @desc Writes employee payroll data to the console.
      * @params None
      * @return None
      */
-    public void writeEmployeePayrollData() {
-    	  try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(FILE_NAME))) {
-              objectOutputStream.writeObject(employeePayrollList);
-              System.out.println("Employee payroll data written to file successfully.");
-          } catch (IOException e) {
-              e.printStackTrace();
-          }
+    public void writeEmployeePayrollData(List<EmployeePayrollData> employeePayrollList)
+    { 
+    	StringBuffer empBuffer = new StringBuffer(); employeePayrollList.forEach(employee -> { String employeeDataString = employee.toString().concat("\n"); empBuffer.append(employeeDataString); });
+
+    try {
+
+    Files.write(Paths.get(FILE_NAME), empBuffer.toString().getBytes());
+
+    } catch (IOException e) {
+    	 e.printStackTrace();
+    }
+
     }
     
     /**
      * @desc Counts the number of employees in the file
      * @params None
-     * @return Integer (no of employees in the file)
+     * @return Int (no of employees in the file)
      */
     public int countEntries() {
-        try (ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(FILE_NAME))) {
-            List<EmployeePayrollData> storedData = (List<EmployeePayrollData>) objectInputStream.readObject();
-            return storedData.size();
-        } catch (IOException | ClassNotFoundException e) {
+    	int enteries=0;
+    	try {
+    		enteries=(int) Files.lines(new File(FILE_NAME).toPath())
+    		.count();
+    	}
+    	
+         catch (IOException  e) {
             e.printStackTrace();
-            return -1;
+        }
+    	return enteries;
+    }
+    
+    //<----------------------USE CASE 5------------------------------>
+    /**
+     * @desc Print the details of each employee
+     * @params None
+     * @return None
+     */
+    public void printEmployeePayrollData() {
+    	try {
+    		Files.lines(new File(FILE_NAME).toPath())
+    		.forEach(System.out::println);
+    	}
+        catch (IOException  e) {
+            e.printStackTrace();
+            
         }
     }
 }
